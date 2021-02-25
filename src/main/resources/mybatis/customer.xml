@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.customer.CustomerDAOInter">
+
+  <insert id="create" parameterType="CustomerVO">
+    INSERT INTO customer(cs_no, cs_type, cs_title, cs_contents, cs_file1, cs_thumb1, cs_size1, cs_rdate, m_no)
+    VALUES(cs_seq.nextval, #{cs_type}, #{cs_title}, #{cs_contents}, #{cs_file1}, #{cs_thumb1}, #{cs_size1}, sysdate, #{m_no})
+  </insert>
+
+  <select id="list_all" resultType="CustomerVO">
+    SELECT cs_no, cs_type, cs_title, cs_contents, cs_file1, cs_thumb1, cs_size1, cs_rdate, cs_cnt, m_no
+    FROM customer
+    ORDER BY cs_no DESC
+   </select>
+
+  <select id="list_by_mno" resultType="CustomerVO" parameterType="int">
+    SELECT cs_no, cs_type, cs_title, cs_contents, cs_file1, cs_thumb1, cs_size1, cs_rdate, cs_cnt, m_no
+    FROM customer
+    WHERE m_no=#{m_no}
+    ORDER BY cs_no DESC
+   </select>
+   
+  <select id="list_by_mno_paging" resultType="CustomerVO" parameterType="HashMap">
+    SELECT r,m_no, cs_no, cs_type, cs_title, cs_contents, cs_file1, cs_thumb1, cs_size1, cs_rdate, cs_cnt
+    FROM (
+            SELECT rownum as r,m_no, cs_no, cs_type, cs_title, cs_contents, cs_file1, cs_thumb1, cs_size1, cs_rdate, cs_cnt
+            FROM (
+                    SELECT m_no, cs_no, cs_type, cs_title, cs_contents, cs_file1, cs_thumb1, cs_size1, cs_rdate, cs_cnt
+                    FROM customer
+                    WHERE m_no=#{m_no}
+                    ORDER BY cs_no DESC
+            )         
+    )
+    WHERE <![CDATA[ r >= #{startNum} AND r <= #{endNum} ]]>
+    <!--     <![CDATA[   ...   ] ]>
+     1 page: WHERE r >= 1 AND r <= 10; 
+     2 page: WHERE r >= 11 AND r <= 20;
+     3 page: WHERE r >= 21 AND r <= 30;
+     -->
+   </select>
+   
+   <select id="search_count"   resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt
+    FROM customer
+    WHERE m_no=#{m_no}   
+   </select>
+   
+  <!-- member+custoemr Join , 후에 member랑 통합할 예정-->
+  <select id="list_join" resultType="Member_Customer_join" >
+    SELECT r.m_no as r_mno, r.mname as r_mname, r.email as r_email,
+               c.cs_no, c.m_no, c.cs_type, c.cs_file1, c.cs_thumb1, cs_size1 ,cs_title, c.cs_contents, c.cs_rdate, c.cs_cnt
+    FROM member r, customer c
+    WHERE r.m_no = c.m_no
+    ORDER BY c.cs_no DESC
+  </select>
+
+ <!-- member+custoemr Join , 후에 member랑 통합할 예정-->
+  <select id="list_my_inquiry" resultType="Member_Customer_join" parameterType="int">
+    SELECT r.m_no as r_mno, r.id as r_mid, r.mname as r_mname, r.email as r_email,
+               c.cs_no, c.m_no, c.cs_type, c.cs_file1, c.cs_thumb1, cs_size1 ,cs_title, c.cs_contents, c.cs_rdate, c.cs_cnt
+    FROM member r, customer c
+    WHERE r.m_no = c.m_no AND c.m_no=#{m_no}
+    ORDER BY c.cs_no DESC
+  </select>
+
+  <select id="read_img" resultType="CustomerVO" parameterType="int">
+    SELECT  cs_no, cs_type, cs_title, cs_contents, cs_file1, cs_thumb1, cs_size1, cs_rdate, cs_cnt, m_no
+    FROM customer
+    WHERE cs_no=#{cs_no}
+  </select>
+  
+  <select id="read" resultType="Member_Customer_join" parameterType="int">
+    SELECT r.m_no as r_mno, r.id as r_mid, r.mname as r_mname, r.email as r_email,
+               c.cs_no, c.m_no, c.cs_type, c.cs_file1, c.cs_thumb1, cs_size1 ,cs_title, c.cs_contents, c.cs_rdate, c.cs_cnt
+    FROM member r, customer c
+    WHERE r.m_no = c.m_no AND cs_no=#{cs_no}
+  </select>
+  
+  <update id="update" parameterType="Member_Customer_join" >
+    UPDATE customer 
+    SET cs_title=#{cs_title}, cs_contents=#{cs_contents}
+    WHERE cs_no = #{cs_no}
+  </update>
+  
+  <!-- 통합 구현 전 sql -->
+  <select id="passwd_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(*) as passwd_cnt
+    FROM member r, customer c
+    WHERE r.m_no = c.m_no AND cs_no=#{cs_no} AND r.passwd=#{r_mpasswd}
+  </select>
+  
+  <delete id="delete"  parameterType="int" >
+    DELETE FROM customer
+    WHERE cs_no=#{cs_no}
+  </delete>
+
+  <!-- 첨부 파일 메인 이미지 변경  -->
+  <update id="update_img"  parameterType="Member_Customer_join" >
+    UPDATE customer
+    SET cs_file1=#{cs_file1}, cs_thumb1=#{cs_thumb1}, cs_size1=#{cs_size1}
+    WHERE cs_no=#{cs_no}
+  </update> 
+  
+<!--   <update id="update_img"  parameterType="CustomerVO" >
+    UPDATE customer
+    SET cs_file1=#{cs_file1}, cs_thumb1=#{cs_thumb1}, cs_size1=#{cs_size1}
+    WHERE cs_no=#{cs_no}
+  </update>  -->
+   
+   
+</mapper>
+
+
+
+
+

@@ -1,0 +1,124 @@
+/* custom css */
+@charset "EUC-KR";
+/* @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap'); */
+   body {
+      background-image: linear-gradient(rgba(99, 71, 62, 0.65), rgba(31, 22, 19, 0.65)), url(../images/bg01.jpg)
+   }
+
+   .fixed {
+      top: 0;
+      position: fixed;
+      width: 100%;
+      z-index: 20;   
+   }
+
+   #account_ul {
+     display: none;
+   }
+
+  .top_menu_link {
+    margin: auto 10px;
+  }
+  
+  .table_basic td {
+    height: 50px;  
+  }
+  
+  .td_left a {
+    text-decoration: none;
+  }
+  
+  .table_basic tr:nth-child( 2n ) a:hover {
+    color: #3f8f36;
+  }
+  
+  .table_basic tr:nth-child( 2n-1 ) a:hover {
+    color: #ff4b5a;
+  }
+  
+  .li_label {
+    width: 100px;
+    float: left;
+    text-align: right;
+    padding-right: 15px;
+  }
+  
+  .content {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .sub_content {
+    padding-bottom: 20px;
+    border-bottom: solid 1px #DDDDDD;
+    margin: 15px 0;
+  }
+  
+  .sub_title {
+    display: inline-block;
+    width: 150px;
+    color: #777;
+  }
+  
+  .delete_form {
+    padding: 20px 0;
+    border-bottom: solid 1px #DDDDDD;
+    margin: 15px 0;
+    border-top: solid 1px #ddd;
+  }
+  
+  .delete_input {
+    display: inline-block;
+    width: 150px;
+    color: #777;
+  }
+  
+  .delete_form input {
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+  }
+  
+  button {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    color: #fff;
+  }
+  
+  .good_img {
+    margin: 0 10px;
+    font-size: 0.8em;
+  }
+  
+  .td_basic a { 
+    margin: 0 3px; 
+  }
+  
+  .etc a:hover {
+    text-decoration: none;
+  }
+  
+  
+  
+  
+
+@media screen and (max-width: 991px) {
+   #account {
+    display: none;
+   }
+   
+   #account_ul {
+    display: block;
+   }
+}
+
+@media screen and (max-width: 576px) {
+  .ebook_list_thumb .card-title a {
+    font-size: 0.7em; 
+  }
+}

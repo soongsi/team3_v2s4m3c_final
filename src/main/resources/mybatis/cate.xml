@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- dev.mvc.cate.CateDAOInter 패키지에 등록된 interface 명시,
+      패키지명과 인터페이스명은 실제로 존재해야함,
+      Spring이 내부적으로 자동으로 interface를 구현해줌. -->
+<mapper namespace="dev.mvc.cate.CateDAOInter">
+  <!-- 
+  insert: INSERT SQL 실행
+  id: Spring에서 호출시 사용
+  parameterType: 전달받는 데이터 객체
+  return: 등록한 레코드 갯수 리턴
+  SQL선언시 ';'은 삭제
+  #{}: ? 동일
+  #{name}: public String getName() 자동 호출
+  -->
+  <insert id="create" parameterType="CateVO">
+    INSERT INTO cate(cateno, cg_no, name, seqno, visible, rdate)
+    VALUES(cate_seq.nextval, #{cg_no}, #{name}, #{seqno} , #{visible}, sysdate)
+  </insert>
+  
+  <!-- 
+    레코드 개수 만큼 CateVO 객체를 만들어 ArrayList에 저장하여 리턴,
+  List<CateVO> list = new ArrayList<CateVO>();
+   -->
+  <select id="list_cateno_asc" resultType="CateVO">
+    SELECT cateno, cg_no, name, seqno, visible, rdate
+    FROM cate
+    ORDER BY cateno ASC
+  </select>
+  
+  <select id="list_seqno_asc" resultType="CateVO">
+    SELECT cateno, cg_no, name, seqno, visible, rdate
+    FROM cate
+    ORDER BY seqno ASC
+  </select>
+  
+  <!-- 카테고리 그룹에 포함된 카테고리 목록 출력 -->
+  <select id="list_cgno_cate" resultType="CateVO">
+    SELECT cateno, cg_no, name, seqno, visible, rdate
+    FROM cate
+    WHERE cg_no = #{cg_no}
+    ORDER BY seqno ASC
+  </select>
+  
+  <!-- categrp + cate inner join,  1 : 多, 통합 VO -->
+  <select id="list_join" resultType="Categrp_Cate_join">
+    SELECT g.cg_no as g_cg_no, g.cg_name as g_name,
+               c.cateno, c.cg_no, c.name, c.seqno, c.visible, c.rdate
+    FROM categrp g, cate c
+    WHERE g.cg_no = c.cg_no
+    ORDER BY g.cg_no ASC, c.seqno ASC
+  </select>
+  
+  <!-- categrpno 별 cate 목록: categrp + cate inner join,  1 : 多, 통합 VO -->
+  <select id="list_join_by_cgno" resultType="Categrp_Cate_join" parameterType="int">
+    SELECT g.cg_no as g_cg_no, g.cg_name as g_name,
+               c.cateno, c.cg_no, c.name, c.seqno, c.visible, c.rdate
+    FROM categrp g, cate c
+    WHERE (g.cg_no = c.cg_no) AND g.cg_no=#{cg_no}
+    ORDER BY g.cg_no ASC, c.seqno ASC
+  </select>
+  
+  <!-- 조회, 수정폼, id: read, 입력: cateno, 리턴: CateVO -->
+  <select id="read" parameterType="int" resultType="CateVO">
+    SELECT cateno, cg_no, name, seqno, visible, rdate 
+    FROM cate
+    WHERE cateno = #{cateno}
+  </select>
+  
+  <!-- 수정, id: update, 입력: CateVO, 리턴: int -->
+  <update id="update" parameterType="CateVO">
+    UPDATE cate
+    SET cg_no = #{cg_no}, name = #{name}, seqno = #{seqno}, visible = #{visible}
+    WHERE cateno = #{cateno}
+  </update>
+  
+  <!-- 삭제, id: delete, 입력: int, 리턴: int -->
+  <delete id="delete" parameterType="int">
+    DELETE 
+    FROM cate
+    WHERE cateno = #{cateno}
+  </delete>
+  
+  <update id="update_seqno_up" parameterType="int">
+    UPDATE cate
+    SET seqno = seqno - 1
+    WHERE cateno = #{cateno}
+  </update>
+  
+  <update id="update_seqno_down" parameterType="int">
+    UPDATE cate
+    SET seqno = seqno + 1
+    WHERE cateno = #{cateno}
+  </update>
+  
+  <update id="update_visible" parameterType="CateVO">
+    UPDATE cate
+    SET visible = #{visible}
+    WHERE cateno = #{cateno}
+  </update>
+ 
+</mapper>

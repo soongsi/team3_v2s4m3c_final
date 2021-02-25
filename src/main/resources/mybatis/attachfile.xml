@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.ebook.attachfile.AttachfileDAOInter">
+  
+  <insert id="create" parameterType="AttachfileVO">
+    INSERT INTO ebook_attachfile(attachfileno, eb_no, fname, fupname, thumb, fsize, rdate)
+    VALUES(attachfile_seq.nextval, #{eb_no}, #{fname}, #{fupname}, #{thumb}, #{fsize}, sysdate)
+  </insert>
+  
+  <select id="list" resultType="AttachfileVO">
+    SELECT attachfileno, eb_no, fname, fupname, thumb, fsize, rdate
+    FROM ebook_attachfile
+    ORDER BY eb_no DESC,  attachfileno ASC
+  </select>
+  
+  <!-- PK 기준 하나의 레코드 조회 -->
+  <select id="read" resultType="AttachfileVO" parameterType="int">
+    SELECT attachfileno, eb_no, fname, fupname, thumb, fsize, rdate
+    FROM ebook_attachfile
+    WHERE attachfileno=#{attachfileno}  
+  </select>
+
+  <!-- FK 기준 ebno가 동일한 레코드 조회, fname 오름차순 -->
+  <select id="list_by_ebno" resultType="AttachfileVO" parameterType="int">
+    SELECT attachfileno, eb_no, fname, fupname, thumb, fsize, rdate
+    FROM ebook_attachfile
+    WHERE eb_no=#{eb_no}
+  </select>
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM ebook_attachfile
+    WHERE attachfileno = #{attachfileno}
+  </delete>
+  
+  <!-- 부모키별 개수 산출 -->
+  <select id="count_by_ebno" parameterType="int" resultType="int">
+    SELECT COUNT(*) as cnt
+    FROM ebook_attachfile
+    WHERE eb_no=#{eb_no}
+  </select>
+  
+  <!-- FK 부모키를 이용한 모든 레코드 삭제 -->
+  <delete id="delete_by_ebno" parameterType="int">
+    DELETE FROM ebook_attachfile
+    WHERE eb_no=#{eb_no}
+  </delete>
+
+</mapper> 

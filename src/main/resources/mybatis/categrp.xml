@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- dev.mvc.categrp.CategrpDAOInter 패키지에 등록된 interface 명시,
+      패키지명과 인터페이스명은 실제로 존재해야함,
+      Spring이 내부적으로 자동으로 interface를 구현해줌. -->
+<mapper namespace="dev.mvc.categrp.CategrpDAOInter">
+  <!-- 
+  insert: INSERT SQL 실행
+  id: Spring에서 호출시 사용
+  parameterType: 전달받는 데이터 객체
+  return: 등록한 레코드 갯수 리턴
+  SQL선언시 ';'은 삭제
+  #{}: ? 동일
+  #{name}: public String getName() 자동 호출
+  -->
+  
+  <!-- 카테고리 그룹 insert -->
+  <insert id="create" parameterType="CategrpVO">
+    INSERT INTO categrp(cg_no, cg_name, cg_seqno, cg_visible, cg_rdate)
+    VALUES(categrp_seq.nextval, #{cg_name}, #{cg_seqno}, #{cg_visible}, sysdate)
+  </insert>
+  
+  <!-- 카테고리 그룹 select (번호 오름차순) -->
+  <select id="list_cgno_asc" resultType="CategrpVO">
+    SELECT cg_no, cg_name, cg_seqno, cg_visible, cg_rdate
+    FROM categrp
+    ORDER BY cg_no
+  </select>
+  
+  <!-- 카테고리 그룹 select (순서 오름차순) -->
+  <select id="list_cgseqno_asc" resultType="CategrpVO">
+    SELECT cg_no, cg_name, cg_seqno, cg_visible, cg_rdate
+    FROM categrp
+    ORDER BY cg_seqno
+  </select>
+  
+  <!-- 조회, 수정폼, id: read, 입력: cg_no, 리턴: CategrpVO -->
+  <select id="read" parameterType="int" resultType="CategrpVO">
+    SELECT cg_no, cg_name, cg_seqno, cg_visible, cg_rdate 
+    FROM categrp
+    WHERE cg_no = #{cg_no}
+  </select>
+  
+  <!-- 수정, id: update, 입력: CategrpVO, 리턴: int -->
+  <update id="update" parameterType="CategrpVO">
+    UPDATE categrp
+    SET cg_name = #{cg_name}, cg_seqno = #{cg_seqno}, cg_visible = #{cg_visible}
+    WHERE cg_no = #{cg_no}
+  </update>
+  
+  <!-- 삭제, id=delete, 입력: PK, 리턴: 삭제된 개수 int -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM categrp
+    WHERE cg_no = #{cg_no}
+  </delete>
+  
+  <!-- 우선순위 상향 up 10 ▷ 1 -->
+  <update id="update_seqno_up" parameterType="int">
+    UPDATE categrp
+    SET cg_seqno = cg_seqno - 1
+    WHERE cg_no = #{cg_no}
+  </update>
+  
+  <!-- 우선순위 하향 down 1 ▷ 10 -->
+  <update id="update_seqno_down" parameterType="int">
+    UPDATE categrp
+    SET cg_seqno = cg_seqno + 1
+    WHERE cg_no = #{cg_no}
+  </update>
+  
+  
+  <!-- 수정, id: update_visible, 입력: CategrpVO, 리턴: int -->
+  <update id="update_visible" parameterType="CategrpVO">
+    UPDATE categrp
+    SET cg_visible = #{cg_visible}
+    WHERE cg_no = #{cg_no}
+  </update>
+ 
+</mapper>

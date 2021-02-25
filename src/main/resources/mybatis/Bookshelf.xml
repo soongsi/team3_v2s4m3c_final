@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- dev.mvc.member.MemberDAOInter 패키지에 등록된 interface 명시,
+      패키지명과 인터페이스명은 실제로 존재해야함,
+      Spring이 내부적으로 자동으로 interface를 구현해줌. -->
+<mapper namespace="dev.mvc.bookshelf.BookshelfDAOInter">
+  
+  <insert id="create" parameterType="BookshelfVO">
+    INSERT INTO bookshelf(bookshelfno, m_no, p_name, p_infor, file1, thumb1, size1)
+    VALUES(bookshelf_seq.nextval, #{m_no}, #{p_name}, #{p_infor}, #{file1}, #{thumb1}, #{size1})
+  </insert>
+  
+  <select id="list_bookshelfno_asc" resultType="BookshelfVO">
+    SELECT bookshelfno, m_no, p_name, p_infor, file1, thumb1, size1
+    FROM bookshelf      
+    ORDER BY bookshelfno asc
+  </select>
+
+  <select id="read" parameterType="int" resultType="BookshelfVO">
+    SELECT bookshelfno, m_no, p_name, p_infor, file1, thumb1, size1
+    FROM bookshelf
+    WHERE bookshelfno = #{bookshelfno}
+  </select>
+
+  <update id="update" parameterType="BookshelfVO">
+    UPDATE bookshelf
+    SET p_name=#{p_name}, p_infor=#{p_infor}
+    WHERE bookshelfno = #{bookshelfno}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM bookshelf
+    WHERE bookshelfno = #{bookshelfno}
+  </delete>
+  
+    <!-- 첨부 파일 메인 이미지 변경 -->
+  <update id="update_img" parameterType="BookshelfVO">
+    UPDATE bookshelf
+    SET file1=#{file1}, thumb1=#{thumb1}, size1=#{size1}
+    WHERE bookshelfno=#{bookshelfno}
+  </update>
+  
+  
+ 
+</mapper>

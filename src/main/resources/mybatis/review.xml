@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.review.ReviewDAOInter">
+
+  <insert id="create" parameterType="ReviewVO">
+  INSERT INTO review(review_no, eb_no, m_no, review_content, 
+                    review_grade, review_rdate, review_good, review_pw)
+  VALUES(review_seq.nextval, #{eb_no}, #{m_no}, #{review_content},
+               #{review_grade}, sysdate, #{review_good}, #{review_pw})
+  </insert>
+  
+  <select id="list_reviewno_asc" resultType="ReviewVO">
+    SELECT review_no, eb_no, m_no, review_content, review_grade, review_rdate, review_good, review_pw
+    FROM review
+    ORDER BY review_no ASC
+  </select>
+  
+  <select id="read" resultType="ReviewVO" parameterType="int">
+    SELECT review_no, eb_no, m_no, review_content, review_grade, review_rdate, review_good, review_pw
+    FROM review
+    WHERE review_no = #{review_no}
+  </select>
+  
+  <update id="update" parameterType="ReviewVO">
+    UPDATE review
+    SET review_content=#{review_content}, review_grade=#{review_grade}, review_good=#{review_good}
+    WHERE review_no = #{review_no}
+  </update>
+  
+  <select id="passwd_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(*) as passwd_cnt
+    FROM review
+    WHERE review_no=#{review_no} AND review_pw=#{review_pw}
+  </select>
+  
+  
+  <delete id="delete" parameterType="int">
+    DELETE review
+    WHERE review_no = #{review_no}
+  </delete>
+  
+
+</mapper>
+
+
+
+
+

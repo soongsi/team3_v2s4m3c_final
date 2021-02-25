@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.cart.CartDAOInter">
+ 
+  <!-- 동일한 상품 레코드 검사  -->
+  <select id="checkEBNO"  resultType="int">
+    SELECT COUNT(*)
+    FROM cart
+    WHERE  user_id =#{user_id} AND eb_no=#{eb_no}
+  </select>
+
+  <!-- 카트 담기 -->
+  <insert id="create">
+    INSERT INTO cart(cart_no, user_id, eb_no)
+    VALUES (cart_seq.nextval, #{user_id}, #{eb_no})
+  </insert>
+
+  <!-- 카트 리스트 -->
+  <select id="list" resultType="CartVO" >
+    SELECT
+         row_number() over(order by c.cart_no desc) as r,
+         c.cart_no , c.user_id, c.eb_no, c.rdate,
+         e.eb_no , e.eb_title, e.eb_price, e.eb_thumb
+    FROM cart c
+         INNER JOIN ebook e
+         ON c.eb_no = e.eb_no   
+         WHERE c.user_id = #{user_id}
+  </select>
+
+  <!-- 카트 선택 삭제  -->
+  <delete id="delete">
+    DELETE cart
+    WHERE  cart_no = #{cart_no} AND user_id =#{user_id}
+  </delete>
+   
+   
+</mapper>
+
+

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.survey.SurveyDAOInter">
+ 
+  <!-- 설문 등록 -->
+  <insert id="create" parameterType="SurveyVO">
+    INSERT INTO survey(survey_no, title, startdate, enddate, continueyn, seqno)
+    VALUES(survey_seq.nextval, #{title}, #{startdate}, #{enddate}, #{continueyn}, #{seqno})
+  </insert>
+
+  <!-- 목록 list_surveyno_desc -->
+  <select id="list_surveyno_desc" resultType="SurveyVO">
+    SELECT survey_no, title, startdate, enddate, cnt, continueyn, survey_result, seqno
+    FROM survey 
+    ORDER BY survey_no DESC
+  </select>
+
+  <!-- 목록 list_seqno_asc -->
+  <select id="list_seqno_asc" resultType="SurveyVO">
+    SELECT survey_no, title, startdate, enddate, cnt, continueyn, survey_result, seqno
+    FROM survey 
+    ORDER BY seqno ASC
+  </select>
+
+  <!-- 조회  -->
+  <select id="read" resultType="SurveyVO"  >
+    SELECT survey_no, title, startdate, enddate, cnt, continueyn, survey_result, seqno
+    FROM survey 
+    WHERE survey_no=#{survey_no}
+  </select>  
+  
+  <!-- 수정  -->
+  <update id="update" parameterType="SurveyVO">
+    UPDATE survey 
+    SET title=#{title}, startdate=#{startdate}, enddate=#{enddate}, continueyn=#{continueyn}, seqno=#{seqno}
+    WHERE survey_no=#{survey_no}
+  </update>   
+  
+  <!-- continueyn 수정  -->
+  <update id="update_continueyn" parameterType="SurveyVO">
+    UPDATE survey 
+    SET continueyn=#{continueyn}
+    WHERE survey_no=#{survey_no}
+  </update>   
+  
+  <!-- 삭제 -->
+  <delete id="delete">
+    DELETE FROM survey
+    WHERE survey_no=#{survey_no}  
+  </delete> 
+   
+   
+   
+   
+</mapper>
+
+

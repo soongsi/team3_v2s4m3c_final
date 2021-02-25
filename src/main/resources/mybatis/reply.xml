@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.reply.ReplyDAOInter">
+
+  <insert id="create" parameterType="ReplyVO">
+    INSERT INTO reply(reply_no, review_no, m_no, reply_cont, reply_pw, reply_date)
+    VALUES(reply_seq.nextval, #{review_no}, #{m_no}, #{reply_cont}, #{reply_pw}, sysdate)
+  </insert>
+  
+  <select id="list_replyno_desc" resultType="ReplyVO">
+    SELECT reply_no, review_no, m_no, reply_cont, reply_pw, reply_date
+    FROM reply
+    ORDER BY reply_no DESC
+  </select>
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM reply
+    WHERE reply_no=#{reply_no}
+
+  </delete>
+  
+ 
+  
+  
+
+</mapper>
+
+
+
+
+

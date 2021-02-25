@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.order_req.OrderreqDAOInter">
+
+  <!-- 등록  --> 
+  <insert id="create" >
+    INSERT INTO order_req(order_no, payid, user_id, eb_no, payway, price)
+    VALUES (orderreq_seq.nextval,#{payid},#{user_id},#{eb_no}, #{payway},#{price})
+  </insert>
+
+  <!-- 관리자페이지: 목록  -->
+  <select id="list_all"  resultType="OrderreqVO">
+    SELECT order_no, payid, user_id, eb_no, payway, price, rdate 
+    FROM order_req
+    ORDER BY rdate ASC
+  </select>
+  
+  <!-- 회원페이지: 목록  -->  
+  <select id="list_by_userid" resultType="OrderreqVO"  parameterType="String">
+    SELECT
+     o.order_no, o.user_id, o.payid, o.payway, o.eb_no, o.price, o.rdate,
+     e.eb_no, e.eb_title, e.eb_thumb
+    FROM order_req o
+         INNER JOIN ebook e
+             ON o.eb_no = e.eb_no
+    WHERE o.user_id = #{user_id}
+  </select>
+
+  <!--  조회  -->
+  <select id="read" resultType="OrderreqVO" parameterType="int">
+    SELECT order_no, payid, user_id, eb_no, payway, price, rdate 
+    FROM order_req
+    WHERE order_no = #{order_no}
+  </select>
+
+  <!--  삭제  -->
+  <delete id="delete">
+    DELETE order_req
+    WHERE order_no=#{order_no}
+  </delete>
+
+</mapper>

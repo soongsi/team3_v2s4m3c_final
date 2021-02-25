@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.ncate.NcateDAOInter">
+  
+  <insert id="create" parameterType="NcateVO">
+    INSERT INTO ncate(ncate_no, ncate_name, nseqno, nvisible, ncate_rdate, ncate_cnt)
+    VALUES(ncate_seq.nextval, #{ncate_name}, #{nseqno}, #{nvisible}, sysdate, 0)
+  </insert> 
+  
+ 
+  <select id="list_ncateno_asc" resultType="NcateVO">
+    SELECT ncate_no, ncate_name, nseqno, nvisible, ncate_rdate, ncate_cnt
+    FROM ncate
+    ORDER BY ncate_no ASC
+  </select>
+  
+  <select id="list_nseqno_asc" resultType="NcateVO">
+    SELECT ncate_no, ncate_name, nseqno, nvisible, ncate_rdate, ncate_cnt
+    FROM ncate
+    ORDER BY nseqno ASC
+  </select>
+
+  <!-- 조회, id: read, 입력: ncateno, 리턴: CateVO -->
+  <select id="read" resultType="NcateVO" parameterType="int">
+    SELECT ncate_no, ncate_name, nseqno, nvisible, ncate_rdate, ncate_cnt
+    FROM ncate
+    WHERE ncate_no=#{ncate_no}
+  </select>  
+  
+  <update id="update" parameterType="NcateVO">
+    UPDATE ncate
+    SET ncate_name=#{ncate_name}, nseqno=#{nseqno}, nvisible=#{nvisible}
+    WHERE ncate_no = #{ncate_no}
+  </update>
+
+  <!-- 삭제, return: int -->
+  <delete id="delete" parameterType="int">
+    DELETE ncate
+    WHERE ncate_no = #{ncate_no}
+  </delete>   
+
+  <!-- 우선순위 상향 up 10 ▷ 1 -->
+  <update id="update_nseqno_up" parameterType="int">
+    UPDATE ncate
+    SET nseqno = nseqno - 1
+    WHERE ncate_no=#{ncate_no}
+  </update>
+  
+  <!-- 우선순위 하향 down 1 ▷ 10 -->
+  <update id="update_nseqno_down" parameterType="int">
+    UPDATE ncate
+    SET nseqno = nseqno + 1
+    WHERE ncate_no=#{ncate_no}
+  </update>
+
+  <update id="update_nvisible" parameterType="NcateVO">
+    UPDATE ncate
+    SET nvisible=#{nvisible}
+    WHERE ncate_no=#{ncate_no}
+  </update>
+  
+  <update id="increaseCnt" parameterType="int">
+    UPDATE ncate 
+    SET ncate_cnt = ncate_cnt + 1 
+    WHERE ncate_no=#{ncate_no}
+  </update>
+
+  <update id="decreaseCnt" parameterType="int">
+    UPDATE ncate 
+    SET ncate_cnt = ncate_cnt - 1 
+    WHERE ncate_no=#{ncate_no}
+  </update>
+  
+</mapper>
+
+
+
+

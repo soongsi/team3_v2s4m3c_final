@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- dev.mvc.member.MemberDAOInter 패키지에 등록된 interface 명시,
+      패키지명과 인터페이스명은 실제로 존재해야함,
+      Spring이 내부적으로 자동으로 interface를 구현해줌. -->
+<mapper namespace="dev.mvc.memberph.MemberphDAOInter">
+  
+  <insert id="create" parameterType="MemberphVO">
+    INSERT INTO memberph(orderno, m_no, p_number, p_infor, p_amount, p_state, file1, thumb1, size1)
+    VALUES(memberph_seq.nextval, #{m_no}, #{p_number}, #{p_infor}, #{p_amount}, #{p_state}, #{file1}, #{thumb1}, #{size1})
+  </insert>
+  
+  <select id="list_orderno_asc" resultType="MemberphVO">
+    SELECT orderno, m_no, p_number, p_infor, p_amount, p_state, file1, thumb1, size1
+    FROM memberph      
+    ORDER BY orderno asc
+  </select>
+
+  <select id="read" parameterType="int" resultType="MemberphVO">
+    SELECT orderno, m_no, p_number, p_infor, p_amount, p_state, file1, thumb1, size1
+    FROM memberph
+    WHERE orderno = #{orderno}
+  </select>
+
+  <update id="update" parameterType="MemberphVO">
+    UPDATE memberph
+    SET p_number=#{p_number}, p_infor=#{p_infor} , p_amount =#{p_amount}, p_state=#{p_state}
+    WHERE orderno = #{orderno}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM memberph
+    WHERE orderno = #{orderno}
+  </delete>
+  
+    <!-- 첨부 파일 메인 이미지 변경 -->
+  <update id="update_img" parameterType="MemberphVO">
+    UPDATE memberph
+    SET file1=#{file1}, thumb1=#{thumb1}, size1=#{size1}
+    WHERE orderno=#{orderno}
+  </update>
+  
+  
+ 
+</mapper>

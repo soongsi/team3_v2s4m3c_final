@@ -1,0 +1,173 @@
+/* custom css */
+  
+  .top_menu_link {
+    margin: auto 10px;
+  }
+  
+  .table_basic td {
+    height: 50px;  
+  }
+  
+  .td_left a {
+    text-decoration: none;
+  }
+  
+  .table_basic tr:nth-child( 2n ) a:hover {
+    color: #3f8f36;
+  }
+  
+  .table_basic tr:nth-child( 2n-1 ) a:hover {
+    color: #ff4b5a;
+  }
+  
+  .li_label {
+    width: 100px;
+    float: left;
+    text-align: right;
+    padding-right: 15px;
+  }
+  
+  .content {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .sub_content {
+    padding-bottom: 20px;
+    border-bottom: solid 1px #DDDDDD;
+    margin: 15px 0;
+  }
+  
+  .sub_title {
+    display: inline-block;
+    width: 150px;
+    color: #777;
+  }
+  
+  .delete_form {
+    padding: 20px 0;
+    border-bottom: solid 1px #DDDDDD;
+    margin: 15px 0;
+    border-top: solid 1px #ddd;
+  }
+  
+  .delete_input {
+    display: inline-block;
+    width: 150px;
+    color: #777;
+  }
+  
+  .delete_form input {
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+  }
+  
+  button {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    color: #fff;
+  }
+  
+  .btn-default:hover {
+    background-color: #e2e2e2;
+  }
+  
+  .good_img {
+    margin: 0 10px;
+    font-size: 0.8em;
+  }
+  
+  .td_basic a { 
+    margin: 0 3px; 
+  }
+  
+  .etc a:hover {
+    text-decoration: none;
+  }
+  
+  .card-title a {   
+    font-size: 1.0em;
+  }
+  
+  .card-title a:hover {
+    text-decoration: none;
+    color: #8e8e8e;
+  }
+  
+  .list_change {
+    float: right;
+    margin: 8px 0;
+  }
+   
+  .listing {
+    margin-right: 5px;
+  }
+  
+  .listing i {
+    font-size: 1.5em;
+  }
+  
+  .ebook_device label {
+    margin-right: 10px;
+  }
+  
+  .cate_reg_div { float: left; }
+  
+  .ebook_search_form #word {
+    float: left;
+    width: 80%;
+  }
+  
+  .ebook_search_form form button {
+    border: 1px solid #ccc;
+    float: left;
+    margin-left: 5px;
+  }
+  
+  .th_bs {
+    vertical-align: middle !important;
+  }
+  
+  .td_bs {
+    vertical-align: middle !important;
+  }
+  
+@media (max-width: 760px) { 
+  .ebook_search_form #word {
+    width: 80%;
+  }
+}
+
+@media (max-width: 576px) { 
+  .title_line { font-size: 1.0em; } 
+  .title_line a { font-size: 1.0em; } 
+  
+  .cate_reg_div { float: right; }
+  
+  .adm_cate colgroup col:nth-child(3) { display: none; }
+  .adm_cate th:nth-child(3) { display: none; }
+  .adm_cate td:nth-child(3) { display: none; }
+   
+  .adm_ebook colgroup col:nth-child(2) { display: none; }
+  .adm_ebook th:nth-child(2) { display: none; }
+  .adm_ebook td:nth-child(2) { display: none; }
+  
+  .adm_ebook colgroup col:nth-child(5) { display: none; }
+  .adm_ebook th:nth-child(5) { display: none; }
+  .adm_ebook td:nth-child(5) { display: none; }
+  
+  .ebook_search_form #word {
+    width: 75%;
+  }
+  
+  .ebook_search_form form button {
+    float: right;
+  }
+  
+}

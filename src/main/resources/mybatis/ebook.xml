@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- dev.mvc.cate.CateDAOInter 패키지에 등록된 interface 명시,
+      패키지명과 인터페이스명은 실제로 존재해야함,
+      Spring이 내부적으로 자동으로 interface를 구현해줌. -->
+<mapper namespace="dev.mvc.ebook.EbookDAOInter">
+  <!-- 
+  insert: INSERT SQL 실행
+  id: Spring에서 호출시 사용
+  parameterType: 전달받는 데이터 객체
+  return: 등록한 레코드 갯수 리턴
+  SQL선언시 ';'은 삭제
+  #{}: ? 동일
+  #{name}: public String getName() 자동 호출
+  -->
+  
+  <insert id="create" parameterType="EbookVO">
+    INSERT INTO ebook(eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_useinfo, eb_device, eb_infor, eb_price, eb_saletot, eb_page, eb_file1, eb_size1, eb_file2, eb_size2, eb_thumb, rdate)
+    VALUES(ebook_seq.nextval, #{cateno}, #{eb_title}, #{eb_author}, #{eb_publisher}, #{eb_pdate}, #{eb_useinfo}, #{eb_device}, #{eb_infor}, #{eb_price}, #{eb_saletot}, #{eb_page}, 
+          #{eb_file1}, #{eb_size1}, #{eb_file2}, #{eb_size2}, #{eb_thumb}, sysdate)
+  </insert>
+  
+  <!-- 페이징이 포함된 전체목록 -->  
+  <select id="list_ebno_desc_paging" resultType="EbookVO">
+    SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, word, rdate, r
+    FROM (
+              SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, word, rdate, rownum as r
+              FROM (
+                        SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, word, rdate
+                        FROM ebook
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                            
+                          </when>
+                          <otherwise>
+                            WHERE (eb_title LIKE '%' || #{word} || '%' 
+                                  OR eb_author LIKE '%' || #{word} || '%' )
+                          </otherwise>
+                        </choose>
+                        ORDER BY eb_no DESC
+              )
+    )
+    WHERE <![CDATA[ r >= #{startNum} AND r <= #{endNum} ]]>
+  </select>
+  
+  
+  <!-- 메인 최근 업로드 도서 목록 -->  
+  <select id="list_ebno_desc_latest" resultType="EbookVO">
+    SELECT eb_no, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, rdate
+    FROM (
+        SELECT eb_no, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, rdate
+        FROM ebook
+        ORDER BY rdate DESC
+    )
+    WHERE <![CDATA[ ROWNUM <= 8 ]]>
+  </select>
+  
+  <!-- 카테고리 그룹에 포함된 카테고리 목록 출력 -->
+  <select id="list_ebook_category" resultType="EbookVO">
+    SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, rdate
+    FROM ebook
+    WHERE cateno = #{cateno}
+    ORDER BY eb_no DESC
+  </select>
+  
+  <!-- 카테고리별 검색 목록 + 페이징 + 메인 이미지  -->
+  <select id="list_by_cateno_search_paging" 
+            resultType="EbookVO" parameterType="HashMap">
+    SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, word, rdate, r
+    FROM (
+              SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, word, rdate, rownum as r
+              FROM (
+                        SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_price, eb_saletot, eb_page, eb_thumb, word, rdate
+                        FROM ebook
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                            WHERE cateno=#{cateno}
+                          </when>
+                          <otherwise>
+                            WHERE cateno=#{cateno} AND (eb_title LIKE '%' || #{word} || '%' 
+                                                      OR eb_author LIKE '%' || #{word} || '%' )
+                          </otherwise>
+                        </choose>
+                        ORDER BY rdate DESC
+              )
+    )
+    WHERE <![CDATA[ r >= #{startNum} AND r <= #{endNum} ]]>
+  </select>
+  
+  <!-- 검색 레코드 갯수 -->
+  <select id="search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM ebook
+    <choose>
+      <when test="cateno lt 1 or cateno == 0">            <!-- 카테고리 없을 때 (전체 카운팅) -->
+        <choose>
+          <when test="word == null or word == ''">
+            WHERE 1 = 1
+          </when>
+          <otherwise>
+            WHERE eb_title LIKE '%' || #{word} || '%' 
+            OR eb_author LIKE '%' || #{word} || '%'
+          </otherwise>
+        </choose>
+      </when>
+      <otherwise>
+        WHERE cateno = #{cateno}
+        <if test="word != null or word != ''">
+          AND (eb_title LIKE '%' || #{word} || '%' 
+            OR eb_author LIKE '%' || #{word} || '%' )
+        </if>
+      </otherwise>
+    </choose>
+    ORDER BY rdate DESC
+  </select>
+  
+  <!-- 조회, 수정폼, id: read, 입력: eb_no, 리턴: EbookVO -->
+  <select id="read" parameterType="int" resultType="EbookVO">
+    SELECT eb_no, cateno, eb_title, eb_author, eb_publisher, eb_pdate, eb_useinfo, eb_device, eb_infor, eb_price, eb_saletot, eb_page, eb_file1, eb_size1, eb_file2, eb_size2, eb_thumb, rdate 
+    FROM ebook
+    WHERE eb_no = #{eb_no}
+  </select>
+  
+  <!-- 수정, id: update, 입력: EbookVO, 리턴: int -->
+  <update id="update" parameterType="EbookVO">
+    UPDATE ebook
+    SET cateno = #{cateno}, eb_title = #{eb_title}, eb_author = #{eb_author}, 
+        eb_publisher = #{eb_publisher}, eb_pdate = #{eb_pdate}, 
+        eb_useinfo = #{eb_useinfo}, eb_device = #{eb_device}, 
+        eb_infor = #{eb_infor}, eb_price = #{eb_price}, 
+        eb_file1 = #{eb_file1}, eb_size1 = #{eb_size1}, eb_page = #{eb_page},
+        eb_file2 = #{eb_file2}, eb_size2 = #{eb_size2}, eb_thumb = #{eb_thumb}
+    WHERE eb_no = #{eb_no}
+  </update>
+  
+  <!-- 삭제, id: delete, 입력: int, 리턴: int -->
+  <delete id="delete" parameterType="int">
+    DELETE 
+    FROM ebook
+    WHERE eb_no = #{eb_no}
+  </delete>
+
+</mapper>
